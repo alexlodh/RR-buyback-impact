@@ -1,38 +1,63 @@
-## RR Buyback Dashboard
+# RR Buyback Impact Dashboard
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+Interactive dashboard for estimating the effect of the announced Rolls-Royce FY2026 share buyback on total shares outstanding and on an individual shareholder's ownership percentage.
 
-## Getting Started
+## What this app does
 
-First, run the development server:
+- Models how many shares can be repurchased from a fixed buyback budget at an assumed average execution price.
+- Estimates the percentage of shares cancelled and remaining shares outstanding.
+- Calculates your ownership percentage before and after cancellation for a custom holding size.
+- Shows relative stake uplift if your share count remains unchanged.
+- Compares preset bear/base/bull price scenarios.
+
+## Model assumptions
+
+The dashboard currently uses fixed reference values from `src/lib/buyback.ts`:
+
+- Shares outstanding: `8,327,863,498`
+- FY2026 buyback budget: `GBP 2,500,000,000`
+- Default share price: `1250p`
+- Price input bounds: `200p` to `2000p`
+
+User-adjustable inputs:
+
+- Average repurchase price (pence)
+- Your shares held
+
+## Core formulas
+
+- Shares repurchased = Buyback budget / Average repurchase price
+- Cancellation percentage = Shares repurchased / Shares outstanding
+- Ownership before = Shares held / Shares outstanding
+- Ownership after = Shares held / (Shares outstanding - Shares repurchased)
+- Relative stake increase = ((ownership after - ownership before) / ownership before) x 100
+
+## Tech stack
+
+- Next.js 16 (App Router)
+- React 19 + TypeScript
+- Tailwind CSS 4
+- shadcn/ui components
+
+## Running locally
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open `http://localhost:3000`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev    # Start development server
+npm run build  # Production build
+npm run start  # Run production server
+npm run lint   # Run ESLint
+```
 
-## Learn More
+## Notes
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- This tool is a scenario model for estimation and exploration.
+- It is not investment advice.
